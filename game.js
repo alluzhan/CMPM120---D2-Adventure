@@ -386,6 +386,8 @@ class Intro extends Phaser.Scene {
         super('intro')
     }
     create() {
+        this.sound.stopAll();
+
         this.cameras.main.setBackgroundColor('0x4F7C6F');
 
         this.add.rectangle(
@@ -435,6 +437,8 @@ class Outro extends Phaser.Scene {
     constructor() {
         super('outro');
     }
+    preload() {
+    }
     create() {
         this.cameras.main.setBackgroundColor('0x4F7C6F');
 
@@ -455,8 +459,16 @@ class Outro extends Phaser.Scene {
             }
         ).setOrigin(0.5);
 
-        this.add.rectangle(this.scale.width/2, this.scale.height/1.38, this.scale.width * 0.2, this.scale.height * 0.1, 0x7FAE7F);
-        this.add.text(this.scale.width/2, this.scale.height/1.38, "restart", {
+        this.add.rectangle(this.scale.width/3, this.scale.height/1.38, this.scale.width * 0.2, this.scale.height * 0.1, 0x7FAE7F);
+        this.add.text(this.scale.width/3, this.scale.height/1.38, "restart", {
+                fontFamily: 'Pixelify Sans',
+                fontSize: '55px',
+                color: '#000000',
+            }
+        ).setOrigin(0.5)
+
+        this.add.rectangle(this.scale.width/1.5, this.scale.height/1.38, this.scale.width * 0.2, this.scale.height * 0.1, 0x7FAE7F);
+        this.add.text(this.scale.width/1.5, this.scale.height/1.38, "credits", {
                 fontFamily: 'Pixelify Sans',
                 fontSize: '55px',
                 color: '#000000',
@@ -464,19 +476,99 @@ class Outro extends Phaser.Scene {
         ).setOrigin(0.5)
 
 
-        this.add.zone(this.scale.width/2, this.scale.height/1.38, this.scale.width * 0.2, this.scale.height * 0.1)
+        this.add.zone(this.scale.width/3, this.scale.height/1.38, this.scale.width * 0.2, this.scale.height * 0.1)
             .setOrigin(0.5)
             .setInteractive()
             .on('pointerdown', () => {
-                //fade out, then start intro scene
                 this.cameras.main.fadeOut(1000, 0, 0, 0);
                 this.time.delayedCall(1000, () => {
                     this.scene.start('intro');
             });
         });
+
+        this.add.zone(this.scale.width/1.5, this.scale.height/1.38, this.scale.width * 0.2, this.scale.height * 0.1)
+            .setOrigin(0.5)
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.cameras.main.fadeOut(1000, 0, 0, 0);
+                this.time.delayedCall(1000, () => {
+                    this.scene.start('credits');
+            });
+        });
     }
 }
 
+class Credits extends Phaser.Scene {
+    constructor() {
+        super('credits');
+    }
+    create() {
+        this.cameras.main.setBackgroundColor('0x4F7C6F');
+        
+        this.add.rectangle(
+        this.scale.width / 2,
+        this.scale.height / 2,
+        this.scale.width * 0.85,
+        this.scale.height * 0.75,
+        0xF7F7F7
+        ).setOrigin(0.5);
+
+        this.add.text(this.scale.width/6, this.scale.height/5.8, "Credits:", {
+                fontFamily: 'Pixelify Sans',
+                fontSize: '70px',
+                color: '#2E2A26',
+            }
+        ).setOrigin(0.5);
+
+        this.ClickLinks = (x, y, label, url) => {
+            let linkText = this.add.text(x, y, label + "\n" + url, {
+                fontFamily: 'Pixelify Sans',
+                fontSize: '25px',
+                color: '#2E2A26'
+            })
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true });
+
+            linkText.on('pointerdown', () => window.open(url, '_blank'));
+        };
+
+        this.ClickLinks(this.scale.width/3.5, this.scale.height/4, 
+            "Furniture Pack by Sierra Assets", 
+            "https://sierrassets.itch.io/pixel-art-furniture-pack");
+
+        this.ClickLinks(this.scale.width/4.2, this.scale.height/2.5, 
+            "Furniture Asset Pack by Manjar Craft", 
+            "https://manjarcraft.itch.io/furniture");
+
+        this.add.text(this.scale.width/2.6, this.scale.height/1.7, 
+            "Background images, windows, bedroom bed, and bedroom sidetable drawn by Alicia Zhang\n(Drawn in Procreate)", {
+                fontFamily: 'Pixelify Sans',
+                fontSize: '25px',
+                color: '#2E2A26',
+            }
+        ).setOrigin(0.5);
+
+        this.add.rectangle(this.scale.width/6, this.scale.height/1.38, this.scale.width * 0.1, this.scale.height * 0.07, 0x7FAE7F);
+        this.add.text(this.scale.width/6, this.scale.height/1.38, "restart", {
+                fontFamily: 'Pixelify Sans',
+                fontSize: '30px',
+                color: '#000000',
+            }
+        ).setOrigin(0.5)
+
+       this.add.zone(this.scale.width/6, this.scale.height/1.38, this.scale.width * 0.1, this.scale.height * 0.07)
+            .setOrigin(0.5)
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.cameras.main.fadeOut(1000, 0, 0, 0);
+                this.time.delayedCall(1000, () => {
+                    this.scene.start('intro');
+            });
+        });
+ 
+    }
+
+}
 
 const game = new Phaser.Game({
     pixelArt: true,
@@ -488,7 +580,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080,
     },
-    scene: [Intro, Bedroom, Bathroom, Kitchen, LivingRoom, Outro],
+    scene: [Intro, Bedroom, Bathroom, Kitchen, LivingRoom, Outro, Credits],
     title: "Unpacking",
 });
 

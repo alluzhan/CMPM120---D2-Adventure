@@ -243,7 +243,7 @@ class AdventureScene extends Phaser.Scene {
             });
         });
     }
-
+    //makes objects move when hovered over
     addHover(obj) {
         obj.setInteractive();
 
