@@ -1,94 +1,383 @@
-class Demo1 extends AdventureScene {
+class Bedroom extends AdventureScene {
     constructor() {
-        super("demo1", "First Room");
+        super("bedroom", "Bedroom");
+    }
+    init(data){
+        this.inventory = [];
+    }
+    preload() {
+        this.load.image('bedroombg', 'assets/images/bedroombg.png');
+        this.load.image('bed', 'assets/images/bed.png');
+        this.load.image('bedtable', 'assets/images/bedtable.png');
+        this.load.image('window', 'assets/images/window.png');
+
+        this.load.image('lamp', 'assets/sprites/lamp.png');
+        this.load.image('desk2', 'assets/sprites/desk2.png');
+        this.load.image('chair', 'assets/sprites/chair.png');
+        this.load.image('door1', 'assets/sprites/door1.png');
+        this.load.image('computer', 'assets/sprites/computer.png');
     }
 
     onEnter() {
+        let bg = this.add.image(0, 0, 'bedroombg').setOrigin(0, 0);
+        bg.setDisplaySize(this.w * 0.75, this.h); 
 
-        let clip = this.add.text(this.w * 0.3, this.w * 0.3, "📎 paperclip")
-            .setFontSize(this.s * 2)
+        let bed = this.add.image(this.w * 0.18, this.h * 0.3, 'bed')
+            .setOrigin(0, 0)
+            .setScale(0.15)
+
+
+        let bedtable = this.add.image(this.w * 0.03, this.h * 0.4, 'bedtable')
+            .setOrigin(0, 0)
+            .setScale(0.1)
+
+        let window = this.add.image(this.w * 0.03, this.h * 0.05, 'window').setOrigin(0, 0).setScale(0.1);
+
+        let lamp = this.add.image(this.w * 0.075, this.h * 0.32, 'lamp')
+            .setOrigin(0, 0)
+            .setScale(12)
             .setInteractive()
-            .on('pointerover', () => this.showMessage("Metal, bent."))
+            .on('pointerover', () => {
+                this.showMessage("A lamp.");
+                this.addHover(lamp);
+            })
             .on('pointerdown', () => {
-                this.showMessage("No touching!");
-                this.tweens.add({
-                    targets: clip,
-                    x: '+=' + this.s,
-                    repeat: 2,
-                    yoyo: true,
-                    ease: 'Sine.inOut',
-                    duration: 100
-                });
+                this.pickup(lamp, "Lamp", "You have packed up a lamp.");
+            });
+        
+        let desk = this.add.image(this.w * 0.38, this.h * 0.4, 'desk2')
+            .setOrigin(0, 0)
+            .setScale(2.5)
+        
+        let chair = this.add.image(this.w * 0.46, this.h * 0.5, 'chair')
+            .setOrigin(0, 0)
+            .setScale(15)
+
+        let computer = this.add.image(this.w * 0.46, this.h * 0.34, 'computer')
+            .setOrigin(0, 0)
+            .setScale(10)
+            .setInteractive()
+            .on('pointerover', () => {
+                this.showMessage("Your computer.");
+                this.addHover(computer);
+            })
+            .on('pointerdown', () => {
+                this.pickup(computer, "Computer", "You have packed up your computer.");
             });
 
-        let key = this.add.text(this.w * 0.5, this.w * 0.1, "🔑 key")
-            .setFontSize(this.s * 2)
-            .setInteractive()
-            .on('pointerover', () => {
-                this.showMessage("It's a nice key.")
-            })
-            .on('pointerdown', () => {
-                this.showMessage("You pick up the key.");
-                this.gainItem('key');
-                this.tweens.add({
-                    targets: key,
-                    y: `-=${2 * this.s}`,
-                    alpha: { from: 1, to: 0 },
-                    duration: 500,
-                    onComplete: () => key.destroy()
-                });
-            })
+        let door1 = this.add.image(this.w * 0.62, this.h * 0.14, 'door1')
+            .setOrigin(0, 0)
+            .setScale(15)
+            .setInteractive();
+        
+        door1.on('pointerdown', () => {
+            if (this.hasItem("Lamp") && this.hasItem("Computer")) {
+                this.gotoScene('bathroom');
+            } 
+            else {
+                this.showMessage("The door is locked. I still need to pack my small items!");
+            }
+        });
 
-        let door = this.add.text(this.w * 0.1, this.w * 0.15, "🚪 locked door")
-            .setFontSize(this.s * 2)
-            .setInteractive()
-            .on('pointerover', () => {
-                if (this.hasItem("key")) {
-                    this.showMessage("You've got the key for this door.");
-                } else {
-                    this.showMessage("It's locked. Can you find a key?");
-                }
-            })
-            .on('pointerdown', () => {
-                if (this.hasItem("key")) {
-                    this.loseItem("key");
-                    this.showMessage("*squeak*");
-                    door.setText("🚪 unlocked door");
-                    this.gotoScene('demo2');
-                }
-            })
+        door1.on('pointerover', () => {
+            if (this.hasItem("Lamp") && this.hasItem("Computer")) {
+                this.showMessage("The door is unlocked! Click to leave.");
+            }
+            else {
+                this.showMessage("The door is locked.");
+            }
+        });
 
     }
 }
 
-class Demo2 extends AdventureScene {
+class Bathroom extends AdventureScene {
     constructor() {
-        super("demo2", "The second room has a long name (it truly does).");
+        super("bathroom", "Bathroom");
+    }
+    init(data){
+        this.inventory = [];
+    }
+    preload() {
+        this.load.image('bathroombg', 'assets/images/bathroombg.png');
+        this.load.image('smallwindow', 'assets/images/smallwindow.png');
+
+        this.load.image('sink', 'assets/sprites/sink.png');
+        this.load.image('toilet', 'assets/sprites/toilet.png');
+        this.load.image('bathtub', 'assets/sprites/bathtub.png');
+        this.load.image('mirror', 'assets/sprites/mirror.png');
+        this.load.image('door1', 'assets/sprites/door1.png');
+        this.load.image('toiletries', 'assets/sprites/toiletries.png');
     }
     onEnter() {
-        this.add.text(this.w * 0.3, this.w * 0.4, "just go back")
-            .setFontSize(this.s * 2)
+        let bg = this.add.image(0, 0, 'bathroombg').setOrigin(0, 0);
+        bg.setDisplaySize(this.w * 0.75, this.h); 
+
+        let smallwindow = this.add.image(this.w * 0.28, this.h * 0.05, 'smallwindow').setOrigin(0, 0).setScale(1);
+
+        let sink = this.add.image(this.w * 0.01, this.h * 0.4, 'sink')
+            .setOrigin(0, 0)
+            .setScale(14)
+
+        let bathtub = this.add.image(this.w * 0.25, this.h * 0.4, 'bathtub')
+            .setOrigin(0, 0)
+            .setScale(14)
+
+        let toilet = this.add.image(this.w * 0.5, this.h * 0.35, 'toilet')
+            .setOrigin(0, 0)
+            .setScale(13)
+        
+        let mirror = this.add.image(this.w * 0.07, this.h * 0.15, 'mirror')
+            .setOrigin(0, 0)
+            .setScale(13)
             .setInteractive()
             .on('pointerover', () => {
-                this.showMessage("You've got no other choice, really.");
+                this.showMessage("A mirror.");
+                this.addHover(mirror);
             })
             .on('pointerdown', () => {
-                this.gotoScene('demo1');
+                this.pickup(mirror, "Mirror", "You have packed up your mirror.");
             });
-
-        let finish = this.add.text(this.w * 0.6, this.w * 0.2, '(finish the game)')
+        
+        let toiletries = this.add.image(this.w * 0.14, this.h * 0.37, 'toiletries')
+            .setOrigin(0, 0)
+            .setScale(8)
             .setInteractive()
             .on('pointerover', () => {
-                this.showMessage('*giggles*');
-                this.tweens.add({
-                    targets: finish,
-                    x: this.s + (this.h - 2 * this.s) * Math.random(),
-                    y: this.s + (this.h - 2 * this.s) * Math.random(),
-                    ease: 'Sine.inOut',
-                    duration: 500
-                });
+                this.showMessage("Your Toiletries.");
+                this.addHover(toiletries);
             })
-            .on('pointerdown', () => this.gotoScene('outro'));
+            .on('pointerdown', () => {
+                this.pickup(toiletries, "Toiletries", "You have packed up your Toiletries.");
+            });
+            
+        let door1 = this.add.image(this.w * 0.62, this.h * 0.14, 'door1')
+            .setOrigin(0, 0)
+            .setScale(15)
+            .setInteractive();
+        
+        door1.on('pointerdown', () => {
+            if (this.hasItem("Mirror") && this.hasItem("Toiletries")) {
+                this.gotoScene('kitchen');
+            } 
+            else {
+                this.showMessage("The door is locked. I still need to pack my small items!");
+            }
+        });
+
+        door1.on('pointerover', () => {
+            if (this.hasItem("Mirror") && this.hasItem("Toiletries")) {
+                this.showMessage("The door is unlocked! Click to leave.");
+            }
+            else {
+                this.showMessage("The door is locked.");
+            }
+        });
+    }
+}
+
+class Kitchen extends AdventureScene {
+    constructor() {
+        super("kitchen", "Kitchen");
+    }
+    init(data){
+        this.inventory = [];
+    }
+    preload() {
+        this.load.image('kitchenbg', 'assets/images/kitchenbg.png');
+
+        this.load.image('fridge', 'assets/sprites/fridge.png');
+        this.load.image('kitchen', 'assets/sprites/kitchen.png');
+        this.load.image('door1', 'assets/sprites/door1.png');
+        this.load.image('plant', 'assets/sprites/plant.png');
+        this.load.image('table', 'assets/sprites/table.png');
+        this.load.image('Plates', 'assets/sprites/Plates.png');
+        this.load.image('Cutlery', 'assets/sprites/Cutlery.png');
+
+    }
+    onEnter() {
+        let bg = this.add.image(0, 0, 'kitchenbg').setOrigin(0, 0);
+        bg.setDisplaySize(this.w * 0.75, this.h);
+
+        let fridge = this.add.image(this.w * 0.414, this.h * 0.25, 'fridge')
+            .setOrigin(0, 0)
+            .setScale(13)
+
+        let kitchen = this.add.image(this.w * 0, this.h * 0.25, 'kitchen')
+            .setOrigin(0, 0)
+            .setScale(13)
+        
+        let table = this.add.image(this.w * 0.4, this.h * 0.7, 'table')
+            .setOrigin(0, 0)
+            .setScale(15)
+        
+        let plant = this.add.image(this.w * 0.54, this.h * 0.43, 'plant')
+            .setOrigin(0, 0)
+            .setScale(14)
+            .setInteractive()
+            .on('pointerover', () => {
+                this.showMessage("A plant.");
+                this.addHover(plant);
+            })
+            .on('pointerdown', () => {
+                this.pickup(plant, "Plant", "You have packed up a plant.");
+            });
+        
+        let plates = this.add.image(this.w * 0.5, this.h * 0.7, 'Plates')
+            .setOrigin(0, 0)
+            .setScale(8)
+            .setInteractive()
+            .on('pointerover', () => {
+                this.showMessage("Your Plates.");
+                this.addHover(plates);
+            })
+            .on('pointerdown', () => {
+                this.pickup(plates, "Plates", "You have packed up your Plates.");
+            });
+
+        let cutlery = this.add.image(this.w * 0.4, this.h * 0.7, 'Cutlery')
+            .setOrigin(0, 0)
+            .setScale(8)
+            .setInteractive()
+            .on('pointerover', () => {
+                this.showMessage("Your Cutlery.");
+                this.addHover(cutlery);
+            })
+            .on('pointerdown', () => {
+                this.pickup(cutlery, "Cutlery", "You have packed up your Cutlery.");
+            });
+        
+        let door1 = this.add.image(this.w * 0.62, this.h * 0.14, 'door1')
+            .setOrigin(0, 0)
+            .setScale(15)
+            .setInteractive();
+        
+        door1.on('pointerdown', () => {
+            if (this.hasItem("Plant") && this.hasItem("Plates") && this.hasItem("Cutlery")) {
+                this.gotoScene('livingroom');
+            } 
+            else {
+                this.showMessage("The door is locked. I still need to pack my small items!");
+            }
+        });
+
+        door1.on('pointerover', () => {
+            if (this.hasItem("Plant") && this.hasItem("Plates") && this.hasItem("Cutlery")) {
+                this.showMessage("The door is unlocked! Click to leave.");
+            }
+            else {
+                this.showMessage("The door is locked.");
+            }
+        });
+    }
+}
+
+class LivingRoom extends AdventureScene {
+    constructor() {
+        super("livingroom", "Living Room");
+    }
+    init(data){
+        this.inventory = [];
+    }
+    preload() {
+        this.load.image('livingroombg', 'assets/images/livingroombg.png');
+
+        this.load.image('couch', 'assets/sprites/couch.png');
+        this.load.image('tv', 'assets/sprites/tv.png');
+        this.load.image('door2', 'assets/sprites/door2.png');
+        this.load.image('easle', 'assets/sprites/easle.png');
+        this.load.image('fireplace', 'assets/sprites/fireplace.png');
+        this.load.image('painting1', 'assets/sprites/painting1.png');
+        this.load.image('painting2', 'assets/sprites/painting2.png');
+        this.load.image('painting3', 'assets/sprites/painting3.png');
+    }
+    onEnter() {
+        let bg = this.add.image(0, 0, 'livingroombg').setOrigin(0, 0);
+        bg.setDisplaySize(this.w * 0.75, this.h);
+
+        let couch = this.add.image(this.w * 0.19, this.h * 0.65, 'couch')
+            .setOrigin(0, 0)
+            .setScale(20)
+        
+        let tv = this.add.image(this.w * 0.24, this.h * 0.07, 'tv')
+            .setOrigin(0, 0)
+            .setScale(14)
+        
+        let fireplace = this.add.image(this.w * 0.23, this.h * 0.4, 'fireplace')
+            .setOrigin(0, 0)
+            .setScale(15)
+        
+        let easle = this.add.image(this.w * 0.02, this.h * 0.4, 'easle')
+            .setOrigin(0, 0)
+            .setScale(15)
+            .setInteractive()
+            .on('pointerover', () => {
+                this.showMessage("An easle.");
+                this.addHover(easle);
+            })
+            .on('pointerdown', () => {
+                this.pickup(easle, "Easle", "You have packed up an easle.");
+            });
+        
+        let LeChatNoir = this.add.image(this.w * 0.01, this.h * 0.1, 'painting1')
+            .setOrigin(0, 0)
+            .setScale(10)
+            .setInteractive()
+            .on('pointerover', () => {
+                this.showMessage("Le Chat Noir by Théophile Steinlen.");
+                this.addHover(LeChatNoir);
+            })
+            .on('pointerdown', () => {
+                this.pickup(LeChatNoir, "Le Chat Noir", "You have packed up 'Le Chat Noir'.");
+            });
+        
+        let TheStarryNight = this.add.image(this.w * 0.12, this.h * 0.2, 'painting2')
+            .setOrigin(0, 0)
+            .setScale(6)
+            .setInteractive()
+            .on('pointerover', () => {
+                this.showMessage("The Starry Night by Vincent van Gogh.");
+                this.addHover(TheStarryNight);
+            })
+            .on('pointerdown', () => {
+                this.pickup(TheStarryNight, "The Starry Night", "You have packed up 'The Starry Night'.");
+            });
+        
+        let Sunflowers = this.add.image(this.w * 0.51, this.h * 0.15, 'painting3')
+            .setOrigin(0, 0)
+            .setScale(10)
+            .setInteractive()
+            .on('pointerover', () => {
+                this.showMessage("Sunflowers by Vincent van Gogh.");
+                this.addHover(Sunflowers);
+            })
+            .on('pointerdown', () => {
+                this.pickup(Sunflowers, "Sunflowers", "You have packed up 'Sunflowers'.");
+            });
+
+        
+        let door2 = this.add.image(this.w * 0.62, this.h * 0.14, 'door2')
+            .setOrigin(0, 0)
+            .setScale(15)
+            .setInteractive();
+    
+        door2.on('pointerdown', () => {
+            if (this.hasItem("Easle") && this.hasItem("Le Chat Noir") && this.hasItem("The Starry Night") && this.hasItem("Sunflowers")) {
+                this.gotoScene('outro');
+            }
+            else {
+                this.showMessage("The door is locked. I still need to pack my small items!");
+            }
+        });
+        
+        door2.on('pointerover', () => {
+            if (this.hasItem("Easle") && this.hasItem("Le Chat Noir") && this.hasItem("The Starry Night") && this.hasItem("Sunflowers")) {
+                this.showMessage("The door is unlocked! Click to leave the house :).");
+            }
+            else {
+                this.showMessage("The door is locked.");
+            }
+        });
     }
 }
 
@@ -97,13 +386,49 @@ class Intro extends Phaser.Scene {
         super('intro')
     }
     create() {
-        this.add.text(50,50, "Adventure awaits!").setFontSize(50);
-        this.add.text(50,100, "Click anywhere to begin.").setFontSize(20);
-        this.input.on('pointerdown', () => {
-            this.cameras.main.fade(1000, 0,0,0);
-            this.time.delayedCall(1000, () => this.scene.start('demo1'));
-        });
+        this.cameras.main.setBackgroundColor('0x4F7C6F');
+
+        this.add.rectangle(
+        this.scale.width / 2,
+        this.scale.height / 2,
+        this.scale.width * 0.85,
+        this.scale.height * 0.75,
+        0xF7F7F7
+        ).setOrigin(0.5);
+        
+        this.add.text(this.scale.width/2, this.scale.height/2.3, "PACKING", {
+                fontFamily: 'Pixelify Sans',
+                fontSize: '250px',
+                color: '#2E2A26',
+                fontStyle: 'bold'
+            }
+        ).setOrigin(0.5);
+
+         this.add.text(this.scale.width/2, this.scale.height/1.75, "Inspired by Unpacking!", {
+                fontFamily: 'Pixelify Sans',
+                fontSize: '50px',
+                color: '#595959',
+            }
+        ).setOrigin(0.5);
+
+        this.add.rectangle(this.scale.width/2, this.scale.height/1.4, this.scale.width * 0.25, this.scale.height * 0.1, 0x7FAE7F);
+        this.add.text(this.scale.width/2, this.scale.height/1.4, "start game", {
+                fontFamily: 'Pixelify Sans',
+                fontSize: '55px',
+                color: '#000000',
+            }
+        ).setOrigin(0.5)
+
+        //if you click on rectangle or the text, start the game
+        this.add.zone(this.scale.width/2, this.scale.height/1.4, this.scale.width * 0.25, this.scale.height * 0.1)
+            .setOrigin(0.5)
+            .setInteractive()
+            .on('pointerdown', () => this.scene.start('bedroom')
+        );
+        
+        
     }
+
 }
 
 class Outro extends Phaser.Scene {
@@ -111,21 +436,59 @@ class Outro extends Phaser.Scene {
         super('outro');
     }
     create() {
-        this.add.text(50, 50, "That's all!").setFontSize(50);
-        this.add.text(50, 100, "Click anywhere to restart.").setFontSize(20);
-        this.input.on('pointerdown', () => this.scene.start('intro'));
+        this.cameras.main.setBackgroundColor('0x4F7C6F');
+
+        this.add.rectangle(
+        this.scale.width / 2,
+        this.scale.height / 2,
+        this.scale.width * 0.85,
+        this.scale.height * 0.75,
+        0xF7F7F7
+        ).setOrigin(0.5);
+        
+        this.add.text(this.scale.width/2, this.scale.height/2.3, "Thank You\nfor Playing!", {
+                fontFamily: 'Pixelify Sans',
+                fontSize: '200px',
+                color: '#2E2A26',
+                fontStyle: 'bold',
+                align: 'center'
+            }
+        ).setOrigin(0.5);
+
+        this.add.rectangle(this.scale.width/2, this.scale.height/1.38, this.scale.width * 0.2, this.scale.height * 0.1, 0x7FAE7F);
+        this.add.text(this.scale.width/2, this.scale.height/1.38, "restart", {
+                fontFamily: 'Pixelify Sans',
+                fontSize: '55px',
+                color: '#000000',
+            }
+        ).setOrigin(0.5)
+
+
+        this.add.zone(this.scale.width/2, this.scale.height/1.38, this.scale.width * 0.2, this.scale.height * 0.1)
+            .setOrigin(0.5)
+            .setInteractive()
+            .on('pointerdown', () => {
+                //fade out, then start intro scene
+                this.cameras.main.fadeOut(1000, 0, 0, 0);
+                this.time.delayedCall(1000, () => {
+                    this.scene.start('intro');
+            });
+        });
     }
 }
 
 
 const game = new Phaser.Game({
+    pixelArt: true,
+    roundPixels: true,
+    
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
         width: 1920,
-        height: 1080
+        height: 1080,
     },
-    scene: [Intro, Demo1, Demo2, Outro],
-    title: "Adventure Game",
+    scene: [Intro, Bedroom, Bathroom, Kitchen, LivingRoom, Outro],
+    title: "Unpacking",
 });
 

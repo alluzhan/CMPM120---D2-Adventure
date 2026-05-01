@@ -227,6 +227,45 @@ class AdventureScene extends Phaser.Scene {
      *         .on('pointerdown', () => this.gotoScene('next_room'));
      * }
      */
+
+    //This allows the player to pick up an object and add it to their inventory while destroying the object in the scene.
+    pickup(obj, itemName, message){
+        obj.on('pointerdown', () => {
+            this.showMessage(message);
+            this.gainItem(itemName);
+
+            this.tweens.add({
+                targets: obj,
+                y: "-=50",
+                alpha: 0,
+                duration: 300,
+                onComplete: () => obj.destroy()
+            });
+        });
+    }
+
+    addHover(obj) {
+        obj.setInteractive();
+
+        obj.on('pointerover', () => {
+            this.tweens.add({
+                targets: obj,
+                y: obj.y - 10, // Move up
+                duration: 200,
+                ease: 'Back.easeOut'
+            });
+        });
+
+        obj.on('pointerout', () => {
+            this.tweens.add({
+                targets: obj,
+                y: obj.y + 10, // Move back down
+                duration: 200,
+                ease: 'Back.easeIn'
+            });
+        });
+    }
+
     onEnter() {
         console.warn('This AdventureScene did not implement onEnter():', this.constructor.name);
     }
