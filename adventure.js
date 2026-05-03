@@ -34,7 +34,9 @@ class AdventureScene extends Phaser.Scene {
         super(key);
         this.name = name;
     }
-
+    preoload() {
+        this.load.audio('pickupsfx', 'assets/sounds/pickupsfx.mp3');
+    }
     /**
      * Phaser lifecycle: called once when the scene starts.
      * Lays out the UI, then invokes {@link AdventureScene#onEnter}.
@@ -228,11 +230,19 @@ class AdventureScene extends Phaser.Scene {
      * }
      */
 
-    //This allows the player to pick up an object and add it to their inventory while destroying the object in the scene.
-    pickup(obj, itemName, message){
+    //This allows the player to pick up an object and add it to their inventory while destroying the object in the scene. Also adds sfx when picking up item
+    pickup(obj, itemName, message, soundKey){
+        obj.setInteractive();
+
         obj.on('pointerdown', () => {
+             if (soundKey) {
+            this.sound.play(soundKey);
+            }
+            
             this.showMessage(message);
             this.gainItem(itemName);
+
+            obj.disableInteractive();
 
             this.tweens.add({
                 targets: obj,

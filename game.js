@@ -16,9 +16,14 @@ class Bedroom extends AdventureScene {
         this.load.image('chair', 'assets/sprites/chair.png');
         this.load.image('door1', 'assets/sprites/door1.png');
         this.load.image('computer', 'assets/sprites/computer.png');
+
+        this.load.audio('pickupsfx', 'assets/sounds/pickupsfx.mp3');
+        this.load.audio('bgm', 'assets/sounds/bgm.mp3');
     }
 
     onEnter() {
+        this.sound.play('bgm', { loop: true, volume: 0.2 });
+
         let bg = this.add.image(0, 0, 'bedroombg').setOrigin(0, 0);
         bg.setDisplaySize(this.w * 0.75, this.h); 
 
@@ -42,7 +47,7 @@ class Bedroom extends AdventureScene {
                 this.addHover(lamp);
             })
             .on('pointerdown', () => {
-                this.pickup(lamp, "Lamp", "You have packed up a lamp.");
+                this.pickup(lamp, "Lamp", "You have packed up a lamp.", "pickupsfx");
             });
         
         let desk = this.add.image(this.w * 0.38, this.h * 0.4, 'desk2')
@@ -52,7 +57,7 @@ class Bedroom extends AdventureScene {
         let chair = this.add.image(this.w * 0.46, this.h * 0.5, 'chair')
             .setOrigin(0, 0)
             .setScale(15)
-
+        
         let computer = this.add.image(this.w * 0.46, this.h * 0.34, 'computer')
             .setOrigin(0, 0)
             .setScale(10)
@@ -62,7 +67,7 @@ class Bedroom extends AdventureScene {
                 this.addHover(computer);
             })
             .on('pointerdown', () => {
-                this.pickup(computer, "Computer", "You have packed up your computer.");
+                this.pickup(computer, "Computer", "You have packed up your computer.", "pickupsfx");
             });
 
         let door1 = this.add.image(this.w * 0.62, this.h * 0.14, 'door1')
@@ -136,7 +141,7 @@ class Bathroom extends AdventureScene {
                 this.addHover(mirror);
             })
             .on('pointerdown', () => {
-                this.pickup(mirror, "Mirror", "You have packed up your mirror.");
+                this.pickup(mirror, "Mirror", "You have packed up your mirror.", "pickupsfx");
             });
         
         let toiletries = this.add.image(this.w * 0.14, this.h * 0.37, 'toiletries')
@@ -148,7 +153,7 @@ class Bathroom extends AdventureScene {
                 this.addHover(toiletries);
             })
             .on('pointerdown', () => {
-                this.pickup(toiletries, "Toiletries", "You have packed up your Toiletries.");
+                this.pickup(toiletries, "Toiletries", "You have packed up your Toiletries.", "pickupsfx");
             });
             
         let door1 = this.add.image(this.w * 0.62, this.h * 0.14, 'door1')
@@ -156,6 +161,7 @@ class Bathroom extends AdventureScene {
             .setScale(15)
             .setInteractive();
         
+
         door1.on('pointerdown', () => {
             if (this.hasItem("Mirror") && this.hasItem("Toiletries")) {
                 this.gotoScene('kitchen');
@@ -220,7 +226,7 @@ class Kitchen extends AdventureScene {
                 this.addHover(plant);
             })
             .on('pointerdown', () => {
-                this.pickup(plant, "Plant", "You have packed up a plant.");
+                this.pickup(plant, "Plant", "You have packed up a plant.", "pickupsfx");
             });
         
         let plates = this.add.image(this.w * 0.5, this.h * 0.7, 'Plates')
@@ -232,7 +238,7 @@ class Kitchen extends AdventureScene {
                 this.addHover(plates);
             })
             .on('pointerdown', () => {
-                this.pickup(plates, "Plates", "You have packed up your Plates.");
+                this.pickup(plates, "Plates", "You have packed up your Plates.", "pickupsfx");
             });
 
         let cutlery = this.add.image(this.w * 0.4, this.h * 0.7, 'Cutlery')
@@ -244,7 +250,7 @@ class Kitchen extends AdventureScene {
                 this.addHover(cutlery);
             })
             .on('pointerdown', () => {
-                this.pickup(cutlery, "Cutlery", "You have packed up your Cutlery.");
+                this.pickup(cutlery, "Cutlery", "You have packed up your Cutlery.", "pickupsfx");
             });
         
         let door1 = this.add.image(this.w * 0.62, this.h * 0.14, 'door1')
@@ -316,7 +322,7 @@ class LivingRoom extends AdventureScene {
                 this.addHover(easle);
             })
             .on('pointerdown', () => {
-                this.pickup(easle, "Easle", "You have packed up an easle.");
+                this.pickup(easle, "Easle", "You have packed up an easle.", "pickupsfx");
             });
         
         let LeChatNoir = this.add.image(this.w * 0.01, this.h * 0.1, 'painting1')
@@ -328,7 +334,7 @@ class LivingRoom extends AdventureScene {
                 this.addHover(LeChatNoir);
             })
             .on('pointerdown', () => {
-                this.pickup(LeChatNoir, "Le Chat Noir", "You have packed up 'Le Chat Noir'.");
+                this.pickup(LeChatNoir, "Le Chat Noir", "You have packed up 'Le Chat Noir'.", "pickupsfx");
             });
         
         let TheStarryNight = this.add.image(this.w * 0.12, this.h * 0.2, 'painting2')
@@ -340,7 +346,7 @@ class LivingRoom extends AdventureScene {
                 this.addHover(TheStarryNight);
             })
             .on('pointerdown', () => {
-                this.pickup(TheStarryNight, "The Starry Night", "You have packed up 'The Starry Night'.");
+                this.pickup(TheStarryNight, "The Starry Night", "You have packed up 'The Starry Night'.", "pickupsfx");
             });
         
         let Sunflowers = this.add.image(this.w * 0.51, this.h * 0.15, 'painting3')
@@ -352,7 +358,7 @@ class LivingRoom extends AdventureScene {
                 this.addHover(Sunflowers);
             })
             .on('pointerdown', () => {
-                this.pickup(Sunflowers, "Sunflowers", "You have packed up 'Sunflowers'.");
+                this.pickup(Sunflowers, "Sunflowers", "You have packed up 'Sunflowers'.", "pickupsfx");
             });
 
         
@@ -536,11 +542,20 @@ class Credits extends Phaser.Scene {
             "Furniture Pack by Sierra Assets", 
             "https://sierrassets.itch.io/pixel-art-furniture-pack");
 
-        this.ClickLinks(this.scale.width/4.2, this.scale.height/2.5, 
+        this.ClickLinks(this.scale.width/4.2, this.scale.height/3, 
             "Furniture Asset Pack by Manjar Craft", 
             "https://manjarcraft.itch.io/furniture");
 
-        this.add.text(this.scale.width/2.6, this.scale.height/1.7, 
+        this.ClickLinks(this.scale.width/2.8, this.scale.height/2.4,
+            "Level Up 03 SFX by Universfield",
+            "https://pixabay.com/sound-effects/film-special-effects-level-up-03-199576/"
+        );
+
+        this.ClickLinks(this.scale.width/2.31, this.scale.height/1.9,
+            "BGM by OpenMindAudio",
+            "https://pixabay.com/sound-effects/musical-podcast-stinger-calm-professional-transition-469111/");
+
+        this.add.text(this.scale.width/2.58, this.scale.height/1.6, 
             "Background images, windows, bedroom bed, and bedroom sidetable drawn by Alicia Zhang\n(Drawn in Procreate)", {
                 fontFamily: 'Pixelify Sans',
                 fontSize: '25px',
@@ -580,7 +595,8 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080,
     },
-    scene: [Intro, Bedroom, Bathroom, Kitchen, LivingRoom, Outro, Credits],
+    //scene: [Intro, Bedroom, Bathroom, Kitchen, LivingRoom, Outro, Credits],
+    scene: [Credits],
     title: "Unpacking",
 });
 
