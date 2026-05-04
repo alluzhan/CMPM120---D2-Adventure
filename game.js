@@ -595,8 +595,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080,
     },
-    //scene: [Intro, Bedroom, Bathroom, Kitchen, LivingRoom, Outro, Credits],
-    scene: [Credits],
+    scene: [Intro, Bedroom, Bathroom, Kitchen, LivingRoom, Outro, Credits],
     title: "Unpacking",
 });
 
